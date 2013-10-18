@@ -10,6 +10,11 @@ body {
   margin: 0;
   padding: 0;
 }
+.warning {
+  background-color: red;
+  color: white;
+  text-align: center;
+}
 .clearfix {
   *zoom: 1;
 }
