@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>AM Tower Locator</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no' />
+    <script src="js/mustache.js"></script>
+    <link href='http://api.tiles.mapbox.com/mapbox.js/v1.3.1/mapbox.css' rel='stylesheet' />
+    <!--[if lte IE 8]>
+      <link href='http://api.tiles.mapbox.com/mapbox.js/v1.3.1/mapbox.ie.css' rel='stylesheet' >
+    <![endif]-->
+    <script src='http://api.tiles.mapbox.com/mapbox.js/v1.3.1/mapbox.js'></script>
+    <link href="css/am-tower-locator.css" rel="stylesheet" media="screen">
+    <!--[if lt IE 9]>
+      <script src="js/html5shiv.js"></script>
+      <script src="js/respond.min.js"></script>
+      <style>.station { width: 46%; }</style>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="intro">
+      <div class="intro-inner">
+        <div class="intro-body">
+          <img src="img/fcc-logo.png" id="fcc-logo" title="FCC" height="28" width="34" />
+          <h1>AM Tower Locator</h1>
+          <h4>Enter the latitude and longitude, <strong>in decimal degrees</strong>, and height, <strong>in meters</strong>, of your tower to determine if you need to notify any AM Stations prior to building.</h4>
+        </div>
+        <form class="form-inline" id="locator">
+          <fieldset>
+            <div class="control-group">
+                <label>Latitude</label>
+                <input class="input-small required latitude" id="lat" name="lat" type="text" placeholder="Latitude">
+                <div class="help"></div>
+            </div>
+            <div class="control-group">
+              <label>Longitude</label>
+              <input class="input-small required longitude" id="long" name="long" type="text" placeholder="Longitude">
+              <div class="help"></div>
+            </div>
+            <div class="control-group">
+              <label>Tower Height</label>
+              <input class="input-small required num" id="height" name="height" type="text" placeholder="Height">
+              <div class="help"></div>
+            </div>
+            <br /><button disabled type="submit" class="btn" value="Search">Search</button> <button class="btn btn-reset" type="reset" value="Reset">Reset</button>
+          </fieldset>
+        </form>
+        <p class="low">
+          Need help converting to decimal degrees?<br />
+          <a href="http://transition.fcc.gov/mb/audio/bickel/DDDMMSS-decimal.html" target="_blank" title="Lat/Long Converter">Lat/Long Converter</a>
+        </p>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="content-inner">
+        <div class="stations clearfix" id="station-notify"></div>
+        <div class="stations clearfix" id="station-dont-notify"></div>
+      </div>
+    </div>
+
+    <!--<hr>
+
+    <div id="footer">
+      <div class="w">
+        <div class="r">
+          <div class="c-3-1">
+              <ul id="footer-contact">
+                  <li>Federal Communications Commission</li>
+                  <li>445 12th Street SW</li>
+                  <li>Washington, DC 20554<br><br></li>
+                  <li>Phone: 1-888-225-5322</li>
+                  <li>TTY:  1-888-835-5322</li>
+                  <li>Fax: 1-866-418-0232</li>
+                  <li><a title="More FCC Contact Information" href="http://www.fcc.gov/contact-us">More FCC Contact Information...</a></li>
+              </ul>
+          </div>
+          <div class="c-3-1">
+              <ul>
+                  <li><a title="RSS" href="http://www.fcc.gov/rss">RSS</a></li>
+                  <li><a title="Privacy Policy" href="http://www.fcc.gov/encyclopedia/privacy-policy">Privacy Policy</a></li>
+                  <li><a title="Moderation Policy" href="http://www.fcc.gov/comment-policy">Moderation Policy</a></li>
+                  <li><a title="Website Policies &amp; Notices" href="http://www.fcc.gov/encyclopedia/website-notices">Website Policies &amp; Notices</a></li>
+                  <li><a title="Required Browser &amp; Plug-ins" href="http://www.fcc.gov/encyclopedia/required-plug-ins-players-and-readers">Required Browser &amp; Plug-ins</a></li>
+              </ul>
+          </div>
+          <div class="c-3-1">
+              <ul>
+                  <li><a title="FOIA" href="http://www.fcc.gov/foia">FOIA</a></li>
+                  <li><a title="No Fear Act Data" href="http://www.fcc.gov/encyclopedia/no-fear-act-data">No Fear Act Data</a></li>
+                  <li><a title="Open Government Directive" href="http://www.fcc.gov/open">Open Government Directive</a></li>
+                  <li><a title="Plain Writing Act" href="http://www.fcc.gov/encyclopedia/plain-writing-fcc">Plain Writing Act</a></li>
+                  <li><a title="2009 Recovery and Reinvestment Act" href="http://www.fcc.gov/encyclopedia/american-recovery-and-reinvestment-act-2009">2009 Recovery and Reinvestment Act</a></li>
+              </ul>
+          </div>
+        </div>
+      </div>
+    </div>-->
+
+    <script src="js/jquery-1.10.2.min.js"></script>
+
+    <script type="text/javascript">
+      $(document).ready(function() {
+        // get height
+        //var divHeight = $(window).height() - $("#about-wrapper").height() - 30;
+        // set heights
+        // $("#map").css("height", divHeight);
+       // $("#station-notify").css("min-height", $(window).height());
+
+        // clear input errors on focus
+        $("#locator input[type=text]").focus(function() {
+          $(this).parent().removeClass("error");
+          $(this).next().css("display", "none");
+        });
+
+        // validation
+        var latitude = new RegExp('^-?(?:90(?:(?:\\.0{1,6})?)|(?:[0-9]|[1-8][0-9])(?:(?:\\.[0-9]{1,6})?))$');
+        var longitude = new RegExp('^-?(?:180(?:(?:\\.0{1,6})?)|(?:[0-9]|[1-9][0-9]|1[0-7][0-9])(?:(?:\\.[0-9]{1,6})?))$');
+
+        $("#locator input[type=text]").blur(function() {
+          var errorCount = 0;
+
+          if ($(this).hasClass("required")) {
+            if ($(this).val() == "" || $(this).val().length == 0 || $(this).val().length == null) {
+              $(this).parent().addClass("error");
+              $(this).next(".help").css("display", "block");
+              $(this).next(".help").text("Required");
+            } else {
+              if ($(this).hasClass("latitude")) {
+                if (latitude.exec($(this).val()) == null) {
+                  $(this).parent().addClass("error");
+                  $(this).next(".help").css("display", "block");
+                  $(this).next(".help").text("-90.000000 to 90.000000");
+                }
+              }
+
+              if ($(this).hasClass("longitude")) {
+                if (longitude.exec($(this).val()) == null) {
+                  $(this).parent().addClass("error");
+                  $(this).next(".help").css("display", "block");
+                  $(this).next(".help").text("-180.000000 to 180.000000");
+                }
+              }
+
+              if ($(this).hasClass("num")) {
+                if (isNaN($(this).val())) {
+                  $(this).parent().addClass("error");
+                  $(this).next(".help").css("display", "block");
+                  $(this).next(".help").text("Must be a Number");
+                }
+              }
+            }
+          }
+
+          // loop through inputs to see if there are errors
+          $("#locator input[type=text]").each(function() {
+            if ($(this).parent().hasClass("error") || $(this).val() == "" || $(this).val().length == 0 || $(this).val().length == null) {
+              errorCount++;
+            }
+          });
+
+          // if no errors enable button, else disable it
+          if (errorCount == 0) {
+            $('button[type="submit"]').removeAttr('disabled');
+          } else {
+            $('button[type="submit"]').prop('disabled', true);
+          }
+        });
+
+        // create the bg map
+        var bgmap = L.mapbox.map('station-notify', 'fcc.map-fd8wksyc', {zoomControl: false}).setView([39.833333, -98.583333], 4);
+        bgmap.dragging.disable();
+        bgmap.touchZoom.disable();
+        bgmap.doubleClickZoom.disable();
+        bgmap.scrollWheelZoom.disable();
+
+        // form submission
+        $("#locator").submit(function() {
+          $("#station-notify").removeClass("leaflet-container");
+
+          // loading screen
+          $.get('templates/stations.html', function(templates) {
+            var template = $(templates).filter('#stations-loading').html();
+            var html = Mustache.to_html(template);
+            $('#station-notify').html(html);
+          });
+
+          // reset the map view
+          //map.setView([$("#lat").val(), $("#long").val()], 12, {zoomControl: false});
+          // add the legend
+         // map.legendControl.addLegend(document.getElementById('legend-content').innerHTML);
+
+          // set up icons
+          var towerIcon = L.icon({
+            className: 'tower-marker',
+            iconUrl: 'img/marker-tower-2x.png',
+            iconSize: [25, 25]
+          });
+          var notifyIcon = L.icon({
+            iconUrl: 'img/marker-notify-2x.png',
+            iconSize: [25, 25]
+          });
+          var okIcon = L.icon({
+            iconUrl: 'img/marker-ok-2x.png',
+            iconSize: [25, 25]
+          });
+
+          var dist = 3; // meters
+          
+          // api url
+          var stationsURL = "http://transition.fcc.gov/fcc-bin/amq?list=8&nad=83&alat=" + $("#lat").val() + "&alon=" + $("#long").val() + "&dist=" + dist;
+
+          // call to get stations
+          $.ajax({
+            url: stationsURL,
+            dataType: 'jsonp',
+            jsonpCallback: 'callback',
+            jsonp: 'callback',
+            success: stations_table,
+            error: function(xhr, status, error) {
+              $.get('templates/stations.html', function(templates) {
+                var template = $(templates).filter('#stations-api-error').html();
+                var html = Mustache.to_html(template);
+                $("#station-notify").html(html).fadeIn(1000);
+              });
+            }
+          });
+
+          // callback function
+          function stations_table(stations) {
+            // removes loading screen after we get results
+            $('#station-notify, #station-dont-notify').html("");
+
+            var curStationIcon;  // to switch the station icon
+            
+            if (stations.stations[0].ant_mode === undefined) {  // no results
+              $.get('templates/stations.html', function(templates) {
+                var template = $(templates).filter('#stations-none').html();
+                var html = Mustache.to_html(template);
+                $(html).hide().appendTo("#station-notify").fadeIn(1000);
+              });
+            } else {  // yes results
+              // loop through api results
+              $.each(stations.stations, function(key, curStation) {
+                // show results one at a time
+                //setTimeout(function() {
+                  // create new station, used to do conversions and math
+                  var modStation = new station(curStation, $("#height").val());
+
+                  // if the station is critical
+                  if (modStation.notify()) {
+                    curStation.notify = "notify";
+                    curStationIcon = notifyIcon;
+
+                    // APpend modified result
+                    $.get('templates/stations.html', function(templates) {
+                      var template = $(templates).filter('#station-detail').html();
+                      var html = Mustache.to_html(template, curStation);
+                      $(html).appendTo("#station-notify");
+                    });
+                    
+                    // interval required to make sure the map container exists
+                    var checkExist = setInterval(function() {
+                       if ($('#st'+curStation.facid+'-'+curStation.hours_operation+'-map').length) {
+                          // set up map for a station
+                          var stationMap = L.mapbox.map('st'+curStation.facid+'-'+curStation.hours_operation+'-map', 'fcc.map-fd8wksyc', {zoomControl: false}).setView([curStation.decimal_lat_nad83, curStation.decimal_lon_nad83], 12);
+
+                          // add proposed tower marker
+                          L.marker([$("#lat").val(), $("#long").val()], {
+                            icon: towerIcon
+                          }).bindPopup("<strong>YOUR TOWER.<strong>").addTo(stationMap);
+
+                          // add AM tower marker
+                          L.marker([curStation.decimal_lat_nad83, curStation.decimal_lon_nad83], {
+                            icon: notifyIcon,
+                            title: "st" + curStation.facid,
+                            bounceOnAdd: true,
+                            bounceOnAddOptions: {
+                              duration: 1000,
+                              height: 50
+                            }
+                          }).bindPopup("<strong>"+curStation.call+"</strong>").addTo(stationMap);
+
+                          stationMap.dragging.disable();
+                          stationMap.touchZoom.disable();
+                          stationMap.doubleClickZoom.disable();
+                          stationMap.scrollWheelZoom.disable();
+
+                          // clear interval
+                          clearInterval(checkExist);
+                       }
+                    }, 100); // check every 100ms
+                  } else { // no worries
+                    curStation.notify = "dont-notify";
+                    curStationIcon = okIcon;
+
+                    // APpend modified result
+                    $.get('templates/stations.html', function(templates) {
+                      var template = $(templates).filter('#station-detail').html();
+                      var html = Mustache.to_html(template, curStation);
+                      $(html).appendTo("#station-dont-notify");
+                    });
+
+                    // interval required to make sure the map container exists
+                    var checkExist = setInterval(function() {
+                       if ($('#st'+curStation.facid+'-'+curStation.hours_operation+'-map').length) {
+                          // set up map for a station
+                          var stationMap = L.mapbox.map('st'+curStation.facid+'-'+curStation.hours_operation+'-map', 'fcc.map-fd8wksyc', {zoomControl: false}).setView([curStation.decimal_lat_nad83, curStation.decimal_lon_nad83], 12);
+
+                          // add proposed tower marker
+                          L.marker([$("#lat").val(), $("#long").val()], {
+                            icon: towerIcon
+                          }).bindPopup("<strong>YOUR TOWER.<strong>").addTo(stationMap);
+
+                          // add AM tower marker
+                          L.marker([curStation.decimal_lat_nad83, curStation.decimal_lon_nad83], {
+                            icon: okIcon,
+                            title: "st" + curStation.facid,
+                            bounceOnAdd: true,
+                            bounceOnAddOptions: {
+                              duration: 1000,
+                              height: 50
+                            }
+                          }).bindPopup("<strong>"+curStation.call+"</strong>").addTo(stationMap);
+
+                          stationMap.dragging.disable();
+                          stationMap.touchZoom.disable();
+                          stationMap.doubleClickZoom.disable();
+                          stationMap.scrollWheelZoom.disable();
+
+                          // clear interval
+                          clearInterval(checkExist);
+                       }
+                    }, 100); // check every 100ms
+                  }
+                }); // end each
+
+              $.get('templates/stations.html', function(templates) {
+                var template = $(templates).filter('#stations-notify-heading').html();
+                var html = Mustache.to_html(template);
+                $(html).prependTo("#station-notify");
+              });
+
+              $.get('templates/stations.html', function(templates) {
+                var template = $(templates).filter('#stations-dont-notify-heading').html();
+                var html = Mustache.to_html(template);
+                $(html).prependTo("#station-dont-notify");
+              });
+            }
+          }
+
+          // a station
+          var station = function(curStation, height) {
+            // is tower directional
+            var isNonDirectional = function() {
+              if (curStation.ant_mode.substring(0, 3) === "NDD") {
+                return true;
+              }
+            };
+
+            // convert kHz to MHz
+            var getMHZ = function() {
+              return parseFloat(curStation.frequency.replace(" kHz", "") * .001);
+            };
+
+            // convert km to meters
+            var getMeters = function() {
+              return parseFloat(curStation.distance.replace(" km", "") * 1000);
+            };
+
+            // get the wavelength
+            var getWavelength = function() {
+              return parseFloat(300 / parseFloat(getMHZ()));
+            };
+
+            // get electrical degrees
+            var getEDegrees = function(height) {
+              return parseFloat(parseFloat(height) / parseFloat(getWavelength()) * 360);
+            };
+
+            // should this tower be notified
+            var isCritical = function() {
+              if (isNonDirectional()) {
+                if ((getWavelength() < getMeters()) && getEDegrees(height) > 60) {
+                  return true;
+                }
+              } else {  // its directional
+                if (getMeters() < getWavelength() * 10 && getMeters() < 3000 && getEDegrees(height) > 36) {
+                  return true;
+                }
+              }
+            };
+
+            // public
+            return {
+              notify: isCritical
+            };
+          }
+          return false;
+        });
+      });
+    </script>
+  </body>
+</html>
