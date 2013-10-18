@@ -164,7 +164,7 @@ input[type="text"] {
   text-decoration: underline;
 }
 
-.content-inner { padding: 20px; }
+.content-inner { padding: 30px; }
 
 #map {
   height: 300px;
