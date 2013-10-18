@@ -31,20 +31,20 @@
           <fieldset>
             <div class="control-group">
                 <label>Latitude</label>
-                <input class="input-small required latitude" id="lat" name="lat" type="text" placeholder="Latitude">
+                <input class="input-small required latitude" id="lat" name="lat" tabindex="1" type="text" placeholder="Latitude">
                 <div class="help"></div>
             </div>
             <div class="control-group">
               <label>Longitude</label>
-              <input class="input-small required longitude" id="long" name="long" type="text" placeholder="Longitude">
+              <input class="input-small required longitude" id="long" name="long" tabindex="2" type="text" placeholder="Longitude">
               <div class="help"></div>
             </div>
             <div class="control-group">
               <label>Tower Height</label>
-              <input class="input-small required num" id="height" name="height" type="text" placeholder="Height">
+              <input class="input-small required num" id="height" name="height" tabindex="3" type="text" placeholder="Height">
               <div class="help"></div>
             </div>
-            <br /><button disabled type="submit" class="btn" value="Search">Search</button> <button class="btn btn-reset" type="reset" value="Reset">Reset</button>
+            <br /><button disabled type="submit" class="btn" tabindex="4" value="Search">Search</button> <button class="btn btn-reset" tabindex="5" type="reset" value="Reset">Reset</button>
           </fieldset>
         </form>
         <p class="low">
@@ -164,6 +164,7 @@
           // if no errors enable button, else disable it
           if (errorCount == 0) {
             $('button[type="submit"]').removeAttr('disabled');
+            $('button[type="submit"]').prop('disabled', false);
           } else {
             $('button[type="submit"]').prop('disabled', true);
           }
