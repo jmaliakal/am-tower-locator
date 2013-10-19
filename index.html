@@ -56,6 +56,7 @@
 
     <div class="content">
       <div class="content-inner">
+        <div id="map"></div>
         <div class="stations clearfix" id="station-notify"></div>
         <div class="stations clearfix" id="station-dont-notify"></div>
       </div>
@@ -171,7 +172,7 @@
         });
 
         // create the bg map
-        var bgmap = L.mapbox.map('station-notify', 'fcc.map-fd8wksyc', {zoomControl: false}).setView([39.833333, -98.583333], 4);
+        var bgmap = L.mapbox.map('map', 'fcc.map-fd8wksyc', {zoomControl: false}).setView([39.833333, -98.583333], 4);
         bgmap.dragging.disable();
         bgmap.touchZoom.disable();
         bgmap.doubleClickZoom.disable();
@@ -179,8 +180,12 @@
 
         // form submission
         $("#locator").submit(function() {
-          $("#station-notify").removeClass("leaflet-container");
-
+          $("#map").css("display", "none");
+          $('#station-notify, #station-dont-notify').html("");
+          $('html,body').animate({
+            scrollTop: $(".content").offset().top
+            },
+            'slow');
           // loading screen
           $.get('templates/stations.html', function(templates) {
             var template = $(templates).filter('#stations-loading').html();
@@ -338,6 +343,7 @@
                   }
                 }); // end each
 
+              // add headings
               $.get('templates/stations.html', function(templates) {
                 var template = $(templates).filter('#stations-notify-heading').html();
                 var html = Mustache.to_html(template);
@@ -349,6 +355,11 @@
                 var html = Mustache.to_html(template);
                 $(html).prependTo("#station-dont-notify");
               });
+
+              $('html,body').animate({
+                scrollTop: $(".content").offset().top
+                },
+                'slow');
             }
           }
 

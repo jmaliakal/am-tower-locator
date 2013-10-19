@@ -189,9 +189,6 @@ input[type="text"] {
   padding: 10px;
   text-align: center;
 }
-#station-notify {
-  min-height: 300px;
-}
 #station-notify .station-heading { background-color: #fd4239; }
 #station-notify h4 { color: #fd4239; }
 #station-dont-notify .station-heading { background-color: #00af4d; }
