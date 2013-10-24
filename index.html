@@ -64,6 +64,7 @@
 
     <script src="js/jquery-1.10.2.min.js"></script>
     <script src="js/validate.js"></script>
+    <script src="js/stations.js"></script>
 
     <script type="text/javascript">
       $(document).ready(function() {
@@ -78,31 +79,15 @@
         $("#locator").submit(function() {
           $("#map").css("display", "none");
           $('#station-notify, #station-dont-notify').html("");
-          $('html,body').animate({
+          $('html,body').animate( {
             scrollTop: $(".content").offset().top
-            },
-            'slow');
+          }, 'slow');
 
           // loading screen
           $.get('templates/stations.html', function(templates) {
             var template = $(templates).filter('#stations-loading').html();
             var html = Mustache.to_html(template);
             $('#station-notify').html(html);
-          });
-
-          // set up icons
-          var towerIcon = L.icon({
-            className: 'tower-marker',
-            iconUrl: 'img/marker-tower-2x.png',
-            iconSize: [25, 25]
-          });
-          var notifyIcon = L.icon({
-            iconUrl: 'img/marker-notify-2x.png',
-            iconSize: [25, 25]
-          });
-          var okIcon = L.icon({
-            iconUrl: 'img/marker-ok-2x.png',
-            iconSize: [25, 25]
           });
 
           var dist = 3; // meters
@@ -116,7 +101,7 @@
             dataType: 'jsonp',
             jsonpCallback: 'callback',
             jsonp: 'callback',
-            success: stations_table,
+            success: stations_output,
             error: function(xhr, status, error) {
               $.get('templates/stations.html', function(templates) {
                 var template = $(templates).filter('#stations-api-error').html();
@@ -125,183 +110,6 @@
               });
             }
           });
-
-          // callback function
-          function stations_table(stations) {
-            // removes loading screen after we get results
-            $('#station-notify, #station-dont-notify').html("");
-
-            var curStationIcon;  // to switch the station icon
-            
-            if (stations.stations[0].ant_mode === undefined) {  // no results
-              $.get('templates/stations.html', function(templates) {
-                var template = $(templates).filter('#stations-none').html();
-                var html = Mustache.to_html(template);
-                $(html).hide().appendTo("#station-notify").fadeIn(1000);
-              });
-            } else {  // yes results
-              // loop through api results
-              $.each(stations.stations, function(key, curStation) {
-                // show results one at a time
-                //setTimeout(function() {
-                  // create new station, used to do conversions and math
-                  var modStation = new station(curStation, $("#height").val());
-
-                  // if the station is critical
-                  if (modStation.notify()) {
-                    curStation.notify = "notify";
-                    curStationIcon = notifyIcon;
-
-                    // APpend modified result
-                    $.get('templates/stations.html', function(templates) {
-                      var template = $(templates).filter('#station-detail').html();
-                      var html = Mustache.to_html(template, curStation);
-                      $(html).appendTo("#station-notify");
-                    });
-                    
-                    // interval required to make sure the map container exists
-                    var checkExist = setInterval(function() {
-                       if ($('#st'+curStation.facid+'-'+curStation.hours_operation+'-map').length) {
-                          // set up map for a station
-                          var stationMap = L.mapbox.map('st'+curStation.facid+'-'+curStation.hours_operation+'-map', 'fcc.map-fd8wksyc', {zoomControl: false}).setView([curStation.decimal_lat_nad83, curStation.decimal_lon_nad83], 12);
-
-                          // add proposed tower marker
-                          L.marker([$("#lat").val(), $("#long").val()], {
-                            icon: towerIcon
-                          }).bindPopup("<strong>YOUR TOWER.<strong>").addTo(stationMap);
-
-                          // add AM tower marker
-                          L.marker([curStation.decimal_lat_nad83, curStation.decimal_lon_nad83], {
-                            icon: notifyIcon,
-                            title: "st" + curStation.facid,
-                            bounceOnAdd: true,
-                            bounceOnAddOptions: {
-                              duration: 1000,
-                              height: 50
-                            }
-                          }).bindPopup("<strong>"+curStation.call+"</strong>").addTo(stationMap);
-
-                          stationMap.dragging.disable();
-                          stationMap.touchZoom.disable();
-                          stationMap.doubleClickZoom.disable();
-                          stationMap.scrollWheelZoom.disable();
-
-                          // clear interval
-                          clearInterval(checkExist);
-                       }
-                    }, 100); // check every 100ms
-                  } else { // no worries
-                    curStation.notify = "dont-notify";
-                    curStationIcon = okIcon;
-
-                    // APpend modified result
-                    $.get('templates/stations.html', function(templates) {
-                      var template = $(templates).filter('#station-detail').html();
-                      var html = Mustache.to_html(template, curStation);
-                      $(html).appendTo("#station-dont-notify");
-                    });
-
-                    // interval required to make sure the map container exists
-                    var checkExist = setInterval(function() {
-                       if ($('#st'+curStation.facid+'-'+curStation.hours_operation+'-map').length) {
-                          // set up map for a station
-                          var stationMap = L.mapbox.map('st'+curStation.facid+'-'+curStation.hours_operation+'-map', 'fcc.map-fd8wksyc', {zoomControl: false}).setView([curStation.decimal_lat_nad83, curStation.decimal_lon_nad83], 12);
-
-                          // add proposed tower marker
-                          L.marker([$("#lat").val(), $("#long").val()], {
-                            icon: towerIcon
-                          }).bindPopup("<strong>YOUR TOWER.<strong>").addTo(stationMap);
-
-                          // add AM tower marker
-                          L.marker([curStation.decimal_lat_nad83, curStation.decimal_lon_nad83], {
-                            icon: okIcon,
-                            title: "st" + curStation.facid,
-                            bounceOnAdd: true,
-                            bounceOnAddOptions: {
-                              duration: 1000,
-                              height: 50
-                            }
-                          }).bindPopup("<strong>"+curStation.call+"</strong>").addTo(stationMap);
-
-                          stationMap.dragging.disable();
-                          stationMap.touchZoom.disable();
-                          stationMap.doubleClickZoom.disable();
-                          stationMap.scrollWheelZoom.disable();
-
-                          // clear interval
-                          clearInterval(checkExist);
-                       }
-                    }, 100); // check every 100ms
-                  }
-                }); // end each
-
-              // add headings
-              $.get('templates/stations.html', function(templates) {
-                var template = $(templates).filter('#stations-notify-heading').html();
-                var html = Mustache.to_html(template);
-                $(html).prependTo("#station-notify");
-              });
-
-              $.get('templates/stations.html', function(templates) {
-                var template = $(templates).filter('#stations-dont-notify-heading').html();
-                var html = Mustache.to_html(template);
-                $(html).prependTo("#station-dont-notify");
-              });
-
-              $('html,body').animate({
-                scrollTop: $(".content").offset().top
-                },
-                'slow');
-            }
-          }
-
-          // a station
-          var station = function(curStation, height) {
-            // is tower directional
-            var isNonDirectional = function() {
-              if (curStation.ant_mode.substring(0, 3) === "NDD") {
-                return true;
-              }
-            };
-
-            // convert kHz to MHz
-            var getMHZ = function() {
-              return parseFloat(curStation.frequency.replace(" kHz", "") * .001);
-            };
-
-            // convert km to meters
-            var getMeters = function() {
-              return parseFloat(curStation.distance.replace(" km", "") * 1000);
-            };
-
-            // get the wavelength
-            var getWavelength = function() {
-              return parseFloat(300 / parseFloat(getMHZ()));
-            };
-
-            // get electrical degrees
-            var getEDegrees = function(height) {
-              return parseFloat(parseFloat(height) / parseFloat(getWavelength()) * 360);
-            };
-
-            // should this tower be notified
-            var isCritical = function() {
-              if (isNonDirectional()) {
-                if ((getWavelength() < getMeters()) && getEDegrees(height) > 60) {
-                  return true;
-                }
-              } else {  // its directional
-                if (getMeters() < getWavelength() * 10 && getMeters() < 3000 && getEDegrees(height) > 36) {
-                  return true;
-                }
-              }
-            };
-
-            // public
-            return {
-              notify: isCritical
-            };
-          }
           return false;
         });
       });

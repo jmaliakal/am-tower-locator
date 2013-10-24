@@ -14,8 +14,8 @@ $(function() {
   // validation on blur
   $("#locator input[type=text]").blur(function() {
     var validateInput = input(this); 
-    if (validateInput.message != null) {
-      setErrors(this, validateInput.message);
+    if (validateInput.message() != null) {
+      setErrors(this, validateInput.message());
     }
   });
 
@@ -24,8 +24,8 @@ $(function() {
     var errors = false;
     $("#locator input[type=text]").each(function() {
       var validateInput = input(this);
-      if (validateInput.message != null) {
-        setErrors(this, validateInput.message);
+      if (validateInput.message() != null) {
+        setErrors(this, validateInput.message());
         errors = true;
       } 
     });
@@ -99,7 +99,7 @@ $(function() {
 
     // public
     return {
-      message: isValid()
+      message: isValid
     };
   } 
 });
