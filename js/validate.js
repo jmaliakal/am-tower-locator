@@ -15,13 +15,13 @@ $(function() {
     if ($(this).hasClass("required")) {
       if ($(this).val() == "" || $(this).val().length == 0 || $(this).val().length == null) {
         $(this).parent().addClass("error");
-        $(this).next(".help").css("display", "block");
+        $(this).next(".help").css("display", "inline-block");
         $(this).next(".help").text("Required");
       } else {
         if ($(this).hasClass("latitude")) {
           if (latitude.exec($(this).val()) == null) {
             $(this).parent().addClass("error");
-            $(this).next(".help").css("display", "block");
+            $(this).next(".help").css("display", "inline-block");
             $(this).next(".help").text("-90.000000 to 90.000000");
           }
         }
@@ -29,7 +29,7 @@ $(function() {
         if ($(this).hasClass("longitude")) {
           if (longitude.exec($(this).val()) == null) {
             $(this).parent().addClass("error");
-            $(this).next(".help").css("display", "block");
+            $(this).next(".help").css("display", "inline-block");
             $(this).next(".help").text("-180.000000 to 180.000000");
           }
         }
@@ -37,7 +37,7 @@ $(function() {
         if ($(this).hasClass("num")) {
           if (isNaN($(this).val())) {
             $(this).parent().addClass("error");
-            $(this).next(".help").css("display", "block");
+            $(this).next(".help").css("display", "inline-block");
             $(this).next(".help").text("Must be a Number");
           }
         }
