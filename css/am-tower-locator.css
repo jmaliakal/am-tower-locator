@@ -1,4 +1,5 @@
 @import url(http://fonts.googleapis.com/css?family=Open+Sans:400,700|Bitter);
+
 html { min-height: 100%; }
 body {
   background-color: #f1f5f6;
@@ -10,11 +11,8 @@ body {
   margin: 0;
   padding: 0;
 }
-.warning {
-  background-color: red;
-  color: white;
-  text-align: center;
-}
+
+/* clearfix */
 .clearfix {
   *zoom: 1;
 }
@@ -28,6 +26,7 @@ body {
   clear: both;
 }
 
+/* resets */
 a {
   color: #0088CC;
   text-decoration: none;
@@ -36,8 +35,7 @@ a:hover, a:focus {
   color: #005580;
   text-decoration: underline;
 }
-fieldset{padding:0;margin:0;border:0}
-input, button { font-family: "Open Sans","Helvetica Neue",Helvetica,Calibri,Arial,sans-serif; }
+
 h1 {
   font-family: "Bitter", Georgia, Cambria, serif;
   font-size: 24px;
@@ -68,7 +66,11 @@ hr {
   border-bottom: 1px solid #dddddd;
   margin: 0;
 }
+
+/* form */
 form { margin-top: 20px; }
+fieldset{padding:0;margin:0;border:0}
+input, button { font-family: "Open Sans","Helvetica Neue",Helvetica,Calibri,Arial,sans-serif; }
 label {
   display: block;
   font-weight: bold;
@@ -83,9 +85,20 @@ input[type="text"] {
   height: 20px;
   line-height: 20px;
   padding: 4px 6px;
-  width: 100px;
+  width: 90px;
+}
+.help {
+  color: #fd4239;
+  display: none;
+  font-size: 12px;
+  font-weight: bold;
+  margin-top: 5px;
+}
+.control-group.error input {
+  color: #fd4239;
 }
 
+/* buttons */
 .btn {
   -moz-border-bottom-colors: none;
   -moz-border-left-colors: none;
@@ -112,7 +125,6 @@ input[type="text"] {
   margin-bottom: 0;
   padding: 4px 12px;
   text-align: center;
-  text-shadow: 0 1px 1px rgba(255, 255, 255, 0);
   text-transform: uppercase;
   vertical-align: middle;
 }
@@ -137,12 +149,7 @@ input[type="text"] {
   border-bottom: 1px solid #404040;
 }
 
-.control-group.error input,
-.control-group.error select,
-.control-group.error textarea {
-  border-color: #fd4239;
-}
-
+/* intro */
 .intro {
   background-color: #ffffff;
   border-bottom: 1px solid #dddddd;
@@ -159,13 +166,13 @@ input[type="text"] {
   font-style: italic;
   margin-top: 20px;
 }
-.low a {
+.muted a {
   color: #aaaaaa;
   text-decoration: underline;
 }
 
+/* content */
 .content-inner { padding: 25px; }
-
 #map {
   height: 300px;
   width: 100%;
@@ -176,6 +183,7 @@ input[type="text"] {
   width: 100%;
 }
 
+/* stations */
 .station {
   background-color: #ffffff;
   border-radius: 2px;
@@ -228,26 +236,11 @@ a.station-info-link {
   font-weight: bold;
   text-transform: uppercase;
 }
-
 .licensee {
   text-transform: capitalize;
 }
 
-/* form */
-.help {
-  color: #fd4239;
-  display: none;
-  font-size: 12px;
-  font-weight: bold;
-  margin-top: 5px;
-}
-.control-group.error input {
-  color: #fd4239;
-}
-.input-small {
-  width: 90px;
-}
-
+/* footer */
 #footer {
   background-color: #ffffff;
   -webkit-border-top-right-radius: 2px;
