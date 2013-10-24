@@ -44,7 +44,7 @@
               <input class="input-small required num" id="height" name="height" tabindex="3" type="text" placeholder="Height">
               <div class="help"></div>
             </div>
-            <br /><button type="submit" class="btn" tabindex="4" value="Search">Search</button> <button class="btn btn-reset" tabindex="5" type="reset" value="Reset">Reset</button>
+            <br /><button id="search" name="search" type="button" class="btn" tabindex="4" value="Search">Search</button> <button class="btn btn-reset" tabindex="5" type="reset" value="Reset">Reset</button>
           </fieldset>
         </form>
         <p class="muted">
@@ -82,17 +82,13 @@
             scrollTop: $(".content").offset().top
             },
             'slow');
+
           // loading screen
           $.get('templates/stations.html', function(templates) {
             var template = $(templates).filter('#stations-loading').html();
             var html = Mustache.to_html(template);
             $('#station-notify').html(html);
           });
-
-          // reset the map view
-          //map.setView([$("#lat").val(), $("#long").val()], 12, {zoomControl: false});
-          // add the legend
-         // map.legendControl.addLegend(document.getElementById('legend-content').innerHTML);
 
           // set up icons
           var towerIcon = L.icon({
