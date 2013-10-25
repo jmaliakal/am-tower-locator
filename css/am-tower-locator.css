@@ -149,6 +149,17 @@ input[type="text"] {
   border-bottom: 1px solid #404040;
 }
 
+.warning {
+  background-color: #FD4239;
+  border-radius: 2px 2px 2px 2px;
+  color: #FFFFFF;
+  font-weight: bold;
+  line-height: 1;
+  margin-bottom: 10px;
+  padding: 5px;
+  text-align: center;
+}
+
 /* intro */
 .intro {
   background-color: #ffffff;
@@ -160,7 +171,7 @@ input[type="text"] {
 }
 .intro strong { color: #000000; }
 .intro-inner { padding: 20px; }
-.low {
+.muted {
   color: #aaaaaa;
   font-size: 13px;
   font-style: italic;
@@ -183,10 +194,21 @@ input[type="text"] {
   width: 100%;
 }
 
+.legend { text-align: center; }
+.legend img { margin: -4px 0; }
+.legend h5 {
+  font-size: 16px;
+  margin: 10px 0;
+  text-transform: uppercase;
+}
+h5.notify { color: #fd4239; }
+h5.dont-notify { color: #00af4d; }
+
 /* stations */
 .station {
   background-color: #ffffff;
   border-radius: 2px;
+  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.25);
   margin: 20px 0;
 }
 .station-map {
@@ -235,10 +257,6 @@ a.station-info-link {
   border-right: 1px solid #dddddd;
   width: 50%
 }
-/*.stations h4 span {
-  font-weight: bold;
-  text-transform: uppercase;
-}*/
 .licensee {
   text-transform: capitalize;
 }

@@ -58,8 +58,6 @@
       <div class="content-inner">
         <div id="map"></div>
         <div class="stations" id="stations"></div>
-        <!--<div class="stations clearfix" id="station-notify"></div>
-        <div class="stations clearfix" id="station-dont-notify"></div>-->
       </div>
     </div>
 
@@ -80,6 +78,7 @@
         $("#locator").submit(function() {
           $("#map").css("display", "none");
           $('#stations').html("");
+          
           $('html,body').animate( {
             scrollTop: $(".content").offset().top
           }, 'slow');
@@ -112,8 +111,8 @@
             }
           });
           return false;
-        });
-      });
+        }); // end submit
+      }); // end document ready
     </script>
   </body>
 </html>

@@ -6,40 +6,14 @@
   <h3>Sorry there was an error reaching the AM Query API.</h3>
 </script>
 
-<script id="station-detail" type="text/template">
-  <div class="station {{ isCritical }}" id="st{{facid}}">
-    <div class="station-heading">
-      <h3>{{ call }} - {{ licensee }}</h3>
-    </div>
-    <div class="station-map" id="st{{facid}}-{{hours_operation}}-map"></div>
-    <div class="station-info clearfix">
-       <dl>
-        <dt>Address</dt>
-        <dd>{{ city }}, {{ state }}, {{ country }}</dd>
-        <dt>Latitude, Longitude</dt>
-        <dd>{{ decimal_lat_nad83 }}, {{ decimal_lon_nad83 }}</dd>
-        <dt>Distance</dt>
-        <dd>{{ distance }}</dd>
-        <dt>File Number</dt>
-        <dd>{{ file_number }}</dd>
-      </dl>
-      <dl>
-        <dt>Hours of Operation</dt>
-        <dd>{{ hours_operation }}</dd>
-        <dt>Frequency</dt>
-        <dd>{{ frequency }}</dd>
-        <dt>Antenna Mode</dt>
-        <dd>{{ ant_mode }}
-      </dl>
-    </div>
-    <div class="station-extra clearfix">
-      <a class="station-info-link" href="http://licensing.fcc.gov/cgi-bin/ws.exe/prod/cdbs/pubacc/prod/sta_det.pl?Facility_id={{facid}}" target="_blank" title="{{ call }} Details">Station Info</a>
-      <a href="http://licensing.fcc.gov/cgi-bin/ws.exe/prod/cdbs/pubacc/prod/app_det.pl?Application_id={{appid}}" target="_blank">App Info</a>
-    </div>
+<script id="stations-legend" type="text/template">
+  <div class="legend">
+    <h5 class="notify">NOTIFY the stations in <img width="20" height="20" src="/img/marker-notify-2x.png"> <span>red.</span></h5>
+    <h5 class="dont-notify">Stations in <img width="20" height="20" src="/img/marker-ok-2x.png"> <span>green are OK.</span></h5>
   </div>
 </script>
 
-<script id="station-detail-new" type="text/template">
+<script id="station-detail" type="text/template">
   {{#stations}}
   <div class="station {{ isCritical }}" id="st{{facid}}">
     <div class="station-heading">
