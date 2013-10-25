@@ -197,13 +197,19 @@ input[type="text"] {
   padding: 10px;
   text-align: center;
 }
-#station-notify .station-heading { background-color: #fd4239; }
-#station-notify h4 { color: #fd4239; }
-#station-dont-notify .station-heading { background-color: #00af4d; }
-#station-dont-notify h4 { color: #00af4d; }
+.notify .station-heading { background-color: #fd4239; }
+.dont-notify .station-heading { background-color: #00af4d; }
 .station h3 {
   color: #ffffff;
+  line-height: 1;
   margin: 0;
+}
+.station h4 {
+  color: #ffffff;
+  color: rgba(255, 255, 255, .8);
+  font-weight: bold;
+  line-height: 1;
+  margin: 5px 0 0;
 }
 .station-info dl {
   float: left;
@@ -229,13 +235,10 @@ a.station-info-link {
   border-right: 1px solid #dddddd;
   width: 50%
 }
-.stations h4 {
-  text-align: center;
-}
-.stations h4 span {
+/*.stations h4 span {
   font-weight: bold;
   text-transform: uppercase;
-}
+}*/
 .licensee {
   text-transform: capitalize;
 }

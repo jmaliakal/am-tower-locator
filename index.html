@@ -57,8 +57,9 @@
     <div class="content">
       <div class="content-inner">
         <div id="map"></div>
-        <div class="stations clearfix" id="station-notify"></div>
-        <div class="stations clearfix" id="station-dont-notify"></div>
+        <div class="stations" id="stations"></div>
+        <!--<div class="stations clearfix" id="station-notify"></div>
+        <div class="stations clearfix" id="station-dont-notify"></div>-->
       </div>
     </div>
 
@@ -78,7 +79,7 @@
         // form submission
         $("#locator").submit(function() {
           $("#map").css("display", "none");
-          $('#station-notify, #station-dont-notify').html("");
+          $('#stations').html("");
           $('html,body').animate( {
             scrollTop: $(".content").offset().top
           }, 'slow');
@@ -87,7 +88,7 @@
           $.get('templates/stations.html', function(templates) {
             var template = $(templates).filter('#stations-loading').html();
             var html = Mustache.to_html(template);
-            $('#station-notify').html(html);
+            $('#stations').html(html);
           });
 
           var dist = 3; // meters
