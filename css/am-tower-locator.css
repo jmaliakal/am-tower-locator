@@ -95,6 +95,7 @@ input[type="text"] {
   margin-top: 5px;
 }
 .control-group.error input {
+  border-color: #fd4239;
   color: #fd4239;
 }
 
