@@ -260,7 +260,10 @@ a.station-info-link {
 .licensee {
   text-transform: capitalize;
 }
-
+/* mapbox overrides */
+.leaflet-popup-content-wrapper { text-align: center; }
+.notify .leaflet-popup-content-wrapper { color: #fd4239; }
+.dont-notify .leaflet-popup-content-wrapper { color: #00af4d; }
 /* footer */
 #footer {
   background-color: #ffffff;
