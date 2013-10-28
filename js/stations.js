@@ -106,7 +106,6 @@ function compare(a,b) {
 var station = function(curStation, height) {
   // is tower directional
   var isNonDirectional = function() {
-    console.log ('tower count = ' + curStation.tower_count);
     if (curStation.tower_count == 1) {
       return true;
     }
