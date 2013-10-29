@@ -135,11 +135,11 @@ var station = function(curStation, height) {
   var isCritical = function() {
     var critical = 'dont-notify';
     if (isNonDirectional()) {
-      if ((getWavelength() < getMeters()) && getEDegrees(height) > 60) {
+      if (getWavelength() > getMeters() && getEDegrees(height) > 60) {
         critical = 'notify';
       }
     } else {  // its directional
-      if (getMeters() < getWavelength() * 10 && getMeters() < 3000 && getEDegrees(height) > 36) {
+      if ((getWavelength() * 10) > getMeters() && getMeters() < 3000 && getEDegrees(height) > 36) {
         critical = 'notify';
       }
     }
