@@ -242,11 +242,11 @@ h5.dont-notify { color: #00af4d; }
 }
 .station h4 {
   color: #ffffff;
-  color: rgba(255, 255, 255, .8);
   font-weight: bold;
   line-height: 1;
   margin: 5px 0 0;
 }
+.station h4 { color: rgba(255, 255, 255, .8); }
 .station-info dl {
   float: left;
   margin: 4%;

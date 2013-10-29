@@ -89,7 +89,7 @@ function stations_output(stations) {
       },
       'slow');
 
-    window.history.pushState('object or string', 'Title', '?' + $('#lat').val() + '/' + $('#long').val() + '/' + $('#height').val());
+    window.history.pushState('object or string', 'Title', '?lat=' + $('#lat').val() + '&long=' + $('#long').val() + '&height=' + $('#height').val());
   } // end else
 } // end function
 
