@@ -28,14 +28,14 @@ function stations_output(bgmap, stations) {
       $('#stations').html(html);
     });
     
+    // turn map back on
+    $("#map").css("display", "block");
     // add proposed tower marker
     L.marker([$("#lat").val(), $("#long").val()], {
       icon: towerIcon
     }).bindPopup("<strong>YOUR TOWER.<strong>").addTo(bgmap);
     // reset the view
     bgmap.setView([$("#lat").val(), $("#long").val()], 9);
-    // turn map back on
-    $("#map").css("display", "block");
     
   } else {  // yes results
     // loop through api results and add property
