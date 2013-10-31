@@ -275,10 +275,20 @@ a.station-info-link {
 .licensee {
   text-transform: capitalize;
 }
+
+.no-stations { text-align: center; }
+.no-stations h3 {
+  color: #00af4d;
+  display: inline-block;
+  margin-bottom: 30px;
+  text-transform: uppercase;
+}
+
 /* mapbox overrides */
 .leaflet-popup-content-wrapper { text-align: center; }
 .notify .leaflet-popup-content-wrapper { color: #fd4239; }
 .dont-notify .leaflet-popup-content-wrapper { color: #00af4d; }
+
 /* footer */
 #footer {
   background-color: #ffffff;

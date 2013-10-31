@@ -1,5 +1,5 @@
 // callback function
-function stations_output(stations) {
+function stations_output(bgmap, stations) {
   // removes loading screen after we get results
   $('#stations').html("");
 
@@ -21,11 +21,23 @@ function stations_output(stations) {
   var curStationIcon;  // to switch the station icon
   
   if (stations.stations[0].ant_mode === undefined) {  // no results
+    alert ('nothing');
+    // no results message
     $.get('templates/stations.html', function(templates) {
       var template = $(templates).filter('#stations-none').html();
       var html = Mustache.to_html(template);
-      $(html).hide().appendTo("#stations");
+      $('#stations').html(html);
     });
+    
+    // add proposed tower marker
+    L.marker([$("#lat").val(), $("#long").val()], {
+      icon: towerIcon
+    }).bindPopup("<strong>YOUR TOWER.<strong>").addTo(bgmap);
+    // reset the view
+    bgmap.setView([$("#lat").val(), $("#long").val()], 9);
+    // turn map back on
+    $("#map").css("display", "block");
+    
   } else {  // yes results
     // loop through api results and add property
     $.each(stations.stations, function(key, curStation) {

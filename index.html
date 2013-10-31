@@ -55,8 +55,8 @@
 
     <div class="content">
       <div class="content-inner">
-        <div id="map"></div>
         <div class="stations" id="stations"></div>
+        <div id="map"></div>
       </div>
     </div>
 
@@ -100,12 +100,14 @@
             dataType: 'jsonp',
             jsonpCallback: 'callback',
             jsonp: 'callback',
-            success: stations_output,
+            success: function(stations) {
+              stations_output(bgmap, stations);
+            },
             error: function(xhr, status, error) {
               $.get('templates/stations.html', function(templates) {
                 var template = $(templates).filter('#stations-api-error').html();
                 var html = Mustache.to_html(template);
-                $("#station-notify").html(html).fadeIn(1000);
+                $("#stations").html(html);
               });
             }
           });
