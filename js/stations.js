@@ -39,34 +39,44 @@ function stations_output(bgmap, stations) {
     
   } else {  // yes results
     // loop through api results and add property
+    // counts for legend
+    var cNotify = 0;
+    var cDontNotify = 0;
     $.each(stations.stations, function(key, curStation) {
       var modStation = new station(curStation, $("#height").val());
       curStation.isCritical = modStation.notify();
+      if (modStation.notify() == 'notify') {
+        cNotify++;
+      } else {
+        cDontNotify++;
+      }
     }); // end each
     
     // sort the stations to get 'notify' at top
     stations.stations.sort(compare);
 
-    // output the sorted stations
-    $.get('templates/stations.html', function(templates) {
-      var template = $(templates).filter('#station-detail').html();
-      var html = Mustache.to_html(template, stations);
-      $(html).appendTo('#stations');
-    });
-
-    // setup the legend
-    var legend = '#stations-legend';  // default to full legend
-    if ($('.notify').length <= 0) {
-      var legend = '#stations-legend-dont-notify'; // no stations to notify
+    // setup legend
+    if (cNotify > 0) {
+      legend = '#stations-legend-notify'; // no stations to notify
     }
-    if ($('.dont-notify').length <= 0) {
-      var legend = '#stations-legend-notify'; // all stations are notify
+    if (cDontNotify > 0) {
+      legend = '#stations-legend-dont-notify'; // all stations are notify
+    }
+    if (cNotify > 0 && cDontNotify > 0) { // mixed results
+      legend = '#stations-legend-mixed';
     }
     // output the legend
     $.get('templates/stations.html', function(templates) {
       var template = $(templates).filter(legend).html();
       var html = Mustache.to_html(template);
       $(html).prependTo('#stations');
+    });
+
+    // output the sorted stations
+    $.get('templates/stations.html', function(templates) {
+      var template = $(templates).filter('#station-detail').html();
+      var html = Mustache.to_html(template, stations);
+      $(html).appendTo('#stations');
     });
 
     // add the maps to each station
@@ -109,6 +119,7 @@ function stations_output(bgmap, stations) {
       'slow');
 
     window.history.pushState('object or string', 'Title', '?lat=' + $('#lat').val() + '&long=' + $('#long').val() + '&height=' + $('#height').val());
+
   } // end else
 } // end function
 
