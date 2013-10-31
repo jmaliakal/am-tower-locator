@@ -21,7 +21,6 @@ function stations_output(bgmap, stations) {
   var curStationIcon;  // to switch the station icon
   
   if (stations.stations[0].ant_mode === undefined) {  // no results
-    alert ('nothing');
     // no results message
     $.get('templates/stations.html', function(templates) {
       var template = $(templates).filter('#stations-none').html();
@@ -55,9 +54,17 @@ function stations_output(bgmap, stations) {
       $(html).appendTo('#stations');
     });
 
+    // setup the legend
+    var legend = '#stations-legend';  // default to full legend
+    if ($('.notify').length <= 0) {
+      var legend = '#stations-legend-dont-notify'; // no stations to notify
+    }
+    if ($('.dont-notify').length <= 0) {
+      var legend = '#stations-legend-notify'; // all stations are notify
+    }
     // output the legend
     $.get('templates/stations.html', function(templates) {
-      var template = $(templates).filter('#stations-legend').html();
+      var template = $(templates).filter(legend).html();
       var html = Mustache.to_html(template);
       $(html).prependTo('#stations');
     });

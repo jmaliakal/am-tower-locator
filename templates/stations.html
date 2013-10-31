@@ -13,6 +13,18 @@
   </div>
 </script>
 
+<script id="stations-legend-dont-notify" type="text/template">
+  <div class="legend">
+    <h5 class="dont-notify"><span>No stations below <img width="20" height="20" src="img/marker-ok-2x.png"> require a study or notification.</span></h5>
+  </div>
+</script>
+
+<script id="stations-legend" type="text/template">
+  <div class="legend">
+    <h5 class="notify"><span>NOTIFY all the stations listed below <img width="20" height="20" src="img/marker-notify-2x.png">.</span></h5>
+  </div>
+</script>
+
 <script id="station-detail" type="text/template">
   {{#stations}}
   <div class="station {{ isCritical }}" id="st{{facid}}">
