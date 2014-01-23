@@ -51,6 +51,12 @@ $(function() {
       }
     };
 
+    var gtzero = function() {
+      if (Number($(theInput).val()) <= 0) {
+        return true;
+      }
+    };
+
     var latitude = function() {
       if (latitudeExp.exec($(theInput).val()) == null) {
         return true;
@@ -76,6 +82,13 @@ $(function() {
       if ($(theInput).hasClass("num")) {
         if(num()) {
           errorMessage = 'Must be a Number';
+          return errorMessage;
+        }
+      }
+
+      if ($(theInput).hasClass("gtzero")) {
+        if(gtzero()) {
+          errorMessage = 'Must be greater than 0';
           return errorMessage;
         }
       }
