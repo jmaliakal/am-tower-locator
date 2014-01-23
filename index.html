@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>AM Tower Locator</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no' />
+    <meta http-equiv="X-Frame-Options" content="deny">
+    <script src="js/mustache.js"></script>
+    <link href='http://api.tiles.mapbox.com/mapbox.js/v1.3.1/mapbox.css' rel='stylesheet' />
+    <!--[if lte IE 8]>
+      <link href='http://api.tiles.mapbox.com/mapbox.js/v1.3.1/mapbox.ie.css' rel='stylesheet' >
+    <![endif]-->
+    <script src='http://api.tiles.mapbox.com/mapbox.js/v1.3.1/mapbox.js'></script>
+    <link href="css/am-tower-locator.css" rel="stylesheet" media="screen">
+    <!--[if lt IE 9]>
+      <script src="js/html5shiv.js"></script>
+      <script src="js/respond.min.js"></script>
+    <![endif]-->
+    <style id="antiClickjack">body{display:none !important;}</style>
+    <script type="text/javascript">
+    if (self == top) {
+      var antiClickjack = document.getElementById("antiClickjack");
+      antiClickjack.parentNode.removeChild(antiClickjack);
+    } else {
+      top.location = self.location;
+    }
+    </script>
+  </head>
+  <body>
+    <div class="intro">
+      <div class="intro-inner">
+        <div class="intro-body">
+          <div class="warning">
+            <p>Alpha - Not Official</p>
+          </div>
+          <img src="img/fcc-logo.png" id="fcc-logo" title="FCC" height="28" width="34" />
+          <h1>AM Tower Locator</h1>
+          <h4>Enter the latitude and longitude, <strong>in decimal degrees</strong>, and height, <strong>in meters</strong>, of your tower to determine if you need to notify any AM Stations prior to building.</h4>
+        </div>
+        <form class="form-inline" id="locator">
+          <fieldset>
+            <div class="control-group">
+                <label>Latitude</label>
+                <input class="input-small required latitude" id="lat" name="lat" tabindex="1" type="text" placeholder="Latitude">
+                <div class="help"></div>
+            </div>
+            <div class="control-group">
+              <label>Longitude</label>
+              <input class="input-small required longitude" id="long" name="long" tabindex="2" type="text" placeholder="Longitude">
+              <div class="help"></div>
+            </div>
+            <div class="control-group">
+              <label>Tower Height</label>
+              <input class="input-small required num gtzero" id="height" name="height" tabindex="3" type="text" placeholder="Height">
+              <div class="help"></div>
+            </div>
+            <br /><button id="search" name="search" type="button" class="btn" tabindex="4" value="Search">Search</button> <button class="btn btn-reset" tabindex="5" type="reset" value="Reset">Reset</button>
+          </fieldset>
+        </form>
+        <p class="muted">
+          Need help converting to decimal degrees?<br />
+          <a href="http://transition.fcc.gov/mb/audio/bickel/DDDMMSS-decimal.html" target="_blank" title="Lat/Long Converter">Lat/Long Converter</a>
+        </p>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="content-inner">
+        <div class="stations" id="stations"></div>
+        <div id="map"></div>
+      </div>
+    </div>
+
+    <script src="js/jquery-1.10.2.min.js" type="text/javascript"></script>
+    <script src="js/validate.js" type="text/javascript"></script>
+    <script src="js/stations.js" type="text/javascript"></script>
+
+    <script type="text/javascript">
+      $(document).ready(function() {
+        // create the bg map
+        var bgmap = L.mapbox.map('map', 'fcc.map-fd8wksyc', {zoomControl: false}).setView([39.833333, -98.583333], 4);
+        bgmap.dragging.disable();
+        bgmap.touchZoom.disable();
+        bgmap.doubleClickZoom.disable();
+        bgmap.scrollWheelZoom.disable();
+
+        // form submission
+        $("#locator").submit(function() {
+          $("#map").css("display", "none");
+          $('#stations').html("");
+          
+          $('html,body').animate( {
+            scrollTop: $(".content").offset().top
+          }, 'slow');
+
+          // loading screen
+          $.get('templates/stations.html', function(templates) {
+            var template = $(templates).filter('#stations-loading').html();
+            var html = Mustache.to_html(template);
+            $('#stations').html(html);
+          });
+
+          var dist = 3; // meters
+          
+          // api url
+          var stationsURL = "http://transition.fcc.gov/fcc-bin/amq?list=8&nad=83&alat=" + $("#lat").val() + "&alon=" + $("#long").val() + "&dist=" + dist;
+
+          // call to get stations
+          $.ajax({
+            url: stationsURL,
+            dataType: 'jsonp',
+            jsonpCallback: 'callback',
+            jsonp: 'callback',
+            success: function(stations) {
+              stations_output(bgmap, stations);
+            },
+            error: function(xhr, status, error) {
+              $.get('templates/stations.html', function(templates) {
+                var template = $(templates).filter('#stations-api-error').html();
+                var html = Mustache.to_html(template);
+                $("#stations").html(html);
+              });
+            }
+          });
+          return false;
+        }); // end submit
+      }); // end document ready
+    </script>
+  </body>
+</html>
