@@ -1,8 +1,20 @@
 $(function() {
+  // clear errors
+  function clearErrors(input) {
+    $(input).parent().removeClass("error");
+    $(input).next().css("display", "none");
+  }
+
   // clear input errors on focus
   $("#locator input[type=text]").focus(function() {
-    $(this).parent().removeClass("error");
-    $(this).next().css("display", "none");
+    clearErrors(this);
+  });
+
+  // clear errors on reset
+  $("#reset").click(function() {
+    $("#locator input[type=text]").each(function() {
+      clearErrors(this);
+    });
   });
 
   function setErrors(input, message) {
