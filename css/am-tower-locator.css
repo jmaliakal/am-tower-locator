@@ -67,8 +67,10 @@ hr {
 }
 
 .home-text {
-  margin: 0 auto;
-  width: 600px;
+  border-top: 1px dotted #cccccc;
+  margin: 50px auto 0;
+  padding: 20px 0 0;
+  max-width: 600px;
 }
 
 /* form */
@@ -191,8 +193,10 @@ input[type="text"] {
 /* content */
 .content-inner { padding: 25px; }
 #map {
+  border-radius: 2px;
   height: 300px;
-  width: 100%;
+  margin: 10px auto 0;
+  max-width: 600px;
 }
 .loading {
   background: transparent url('../img/locating.gif') no-repeat 50% 50%;
