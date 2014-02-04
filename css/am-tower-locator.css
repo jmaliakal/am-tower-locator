@@ -316,6 +316,9 @@ ul#footer-contact {
     margin-right: 1%;
     width: 48%;
   }
+  .muted {
+    position: relative;
+  }
 }
 @media (min-width: 680px) and (max-width: 1019px) {
   .intro-body, form {
@@ -329,6 +332,10 @@ ul#footer-contact {
   .content-inner { padding: 20px; }
 }
 @media (min-width: 1020px) {
+  .muted {
+    bottom: 20px;    
+    position: absolute;
+  }
   .intro, .content {
     bottom: 0;
     left: 0;
