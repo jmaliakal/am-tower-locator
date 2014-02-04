@@ -67,9 +67,9 @@ hr {
 }
 
 .home-text {
-  border-top: 1px dotted #cccccc;
-  margin: 50px auto 0;
-  padding: 20px 0 0;
+  border-bottom: 1px dotted #cccccc;
+  margin: 50px auto;
+  padding: 0 0 30px;
   max-width: 600px;
 }
 
@@ -195,7 +195,7 @@ input[type="text"] {
 #map {
   border-radius: 2px;
   height: 300px;
-  margin: 10px auto 0;
+  margin: 0 auto;
   max-width: 600px;
 }
 .loading {
