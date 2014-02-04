@@ -17,6 +17,10 @@ function stations_output(bgmap, stations) {
     iconUrl: 'img/marker-ok-2x.png',
     iconSize: [25, 25]
   });
+  var constructionIcon = L.icon({
+    iconUrl: 'img/marker-construction-2x.png',
+    iconSize: [25, 25]
+  });
 
   var curStationIcon;  // to switch the station icon
   
@@ -39,35 +43,17 @@ function stations_output(bgmap, stations) {
     
   } else {  // yes results
     // loop through api results and add property
-    // counts for legend
-    var cNotify = 0;
-    var cDontNotify = 0;
     $.each(stations.stations, function(key, curStation) {
       var modStation = new station(curStation, $("#height").val());
       curStation.isCritical = modStation.notify();
-      if (modStation.notify() == 'notify') {
-        cNotify++;
-      } else {
-        cDontNotify++;
-      }
     }); // end each
     
     // sort the stations to get 'notify' at top
     stations.stations.sort(compare);
 
-    // setup legend
-    if (cNotify > 0) {
-      legend = '#stations-legend-notify'; // no stations to notify
-    }
-    if (cDontNotify > 0) {
-      legend = '#stations-legend-dont-notify'; // all stations are notify
-    }
-    if (cNotify > 0 && cDontNotify > 0) { // mixed results
-      legend = '#stations-legend-mixed';
-    }
     // output the legend
     $.get('templates/stations.html', function(templates) {
-      var template = $(templates).filter(legend).html();
+      var template = $(templates).filter('#stations-legend-mixed').html();
       var html = Mustache.to_html(template);
       $(html).prependTo('#stations');
     });
@@ -83,9 +69,9 @@ function stations_output(bgmap, stations) {
     $.each(stations.stations, function(key, curStation) {
       // interval needed cause it's fast
       var checkExist = setInterval(function() {
-        if ($('#st'+curStation.facid+'-'+curStation.hours_operation+'-map').length) {
+        if ($('#st'+curStation.facid+'-'+curStation.hours_operation+'-'+curStation.status+'-map').length) {
           // set up map for a station
-          var stationMap = L.mapbox.map('st'+curStation.facid+'-'+curStation.hours_operation+'-map', 'fcc.map-fd8wksyc', {zoomControl: false}).setView([$("#lat").val(), $("#long").val()], 12);
+          var stationMap = L.mapbox.map('st'+curStation.facid+'-'+curStation.hours_operation+'-'+curStation.status+'-map', 'fcc.map-fd8wksyc', {zoomControl: false}).setView([$("#lat").val(), $("#long").val()], 12);
           // no need for zoom, etc
           stationMap.dragging.disable();
           stationMap.touchZoom.disable();
@@ -101,6 +87,9 @@ function stations_output(bgmap, stations) {
           var amIcon = notifyIcon;
           if (curStation.isCritical == 'dont-notify') {
             amIcon = dontNotifyIcon;
+          }
+          if (curStation.isCritical == 'construction') {
+            amIcon = constructionIcon;
           }
 
           // add AM tower marker, with popup
@@ -141,6 +130,12 @@ var station = function(curStation, height) {
     }
   };
 
+  var getConstruction = function() {
+    if (curStation.status == "CP") {
+      return true;
+    }
+  };
+
   // convert kHz to MHz
   var getMHZ = function() {
     return parseFloat(curStation.frequency.replace(" kHz", "") * .001);
@@ -164,6 +159,7 @@ var station = function(curStation, height) {
   // should this tower be notified
   var isCritical = function() {
     var critical = 'dont-notify';
+
     if (isNonDirectional()) {
       if (getWavelength() > getMeters() && getEDegrees(height) > 60) {
         critical = 'notify';
@@ -172,6 +168,10 @@ var station = function(curStation, height) {
       if ((getWavelength() * 10) > getMeters() && getMeters() < 3000 && getEDegrees(height) > 36) {
         critical = 'notify';
       }
+    }
+
+    if (getConstruction()) {
+      critical = 'construction';
     }
     return critical;
   };

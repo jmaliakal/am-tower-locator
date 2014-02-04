@@ -1,9 +1,9 @@
-@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,700|Bitter);
+@import url(http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700|Bitter);
 html { min-height: 100%; }
 body {
   background-color: #ffffff;
   color: #444444;
-  font-family: "Open Sans","Helvetica Neue",Helvetica,Calibri,Arial,sans-serif;
+  font-family: "Source Sans Pro","Helvetica Neue",Helvetica,Calibri,Arial,sans-serif;
   font-size: 14px;
   min-height: 100%;
   line-height: 1.5;

@@ -1,13 +1,13 @@
-@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,700|Bitter);
+@import url(http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700|Bitter);
 
 html { min-height: 100%; }
 body {
-  background-color: #f1f5f6;
+  background-color: #eeeeee;
   color: #444444;
-  font-family: "Open Sans","Helvetica Neue",Helvetica,Calibri,Arial,sans-serif;
+  font-family: "Source Sans Pro","Helvetica Neue",Helvetica,Calibri,Arial,sans-serif;
   font-size: 14px;
   min-height: 100%;
-  line-height: 1.5;
+  line-height: 1.4;
   margin: 0;
   padding: 0;
 }
@@ -37,15 +37,14 @@ a:hover, a:focus {
 }
 
 h1 {
-  font-family: "Bitter", Georgia, Cambria, serif;
   font-size: 24px;
   margin: 0;
 }
 h4 {
   font-size: 16px;
+  font-weight: normal;
   margin: 10px 0;
 }
-h1, h4 { font-weight: normal; }
 h5 {
   font-size: 14px;
 }
@@ -67,10 +66,15 @@ hr {
   margin: 0;
 }
 
+.home-text {
+  margin: 0 auto;
+  width: 600px;
+}
+
 /* form */
 form { margin-top: 20px; }
 fieldset{padding:0;margin:0;border:0}
-input, button { font-family: "Open Sans","Helvetica Neue",Helvetica,Calibri,Arial,sans-serif; }
+input, button { font-family: "Source Sans Pro","Helvetica Neue",Helvetica,Calibri,Arial,sans-serif; }
 label {
   display: block;
   font-weight: bold;
@@ -154,9 +158,10 @@ input[type="text"] {
   background-color: #FD4239;
   border-radius: 2px 2px 2px 2px;
   color: #FFFFFF;
+  display: inline-block;
   font-weight: bold;
   line-height: 1;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
   padding: 5px;
   text-align: center;
 }
@@ -195,7 +200,6 @@ input[type="text"] {
   width: 100%;
 }
 
-.legend { text-align: center; }
 .legend img { margin: -4px 0; }
 .legend h5 {
   font-size: 16px;
@@ -230,6 +234,7 @@ h5.dont-notify { color: #00af4d; }
 }
 .notify .station-heading { background-color: #fd4239; }
 .dont-notify .station-heading { background-color: #00af4d; }
+.construction .station-heading { background-color: #444444; }
 .station h3 {
   color: #ffffff;
   line-height: 1;
@@ -237,11 +242,11 @@ h5.dont-notify { color: #00af4d; }
 }
 .station h4 {
   color: #ffffff;
+  color: rgba(255, 255, 255, .8);
   font-weight: bold;
   line-height: 1;
   margin: 5px 0 0;
 }
-.station h4 { color: rgba(255, 255, 255, .8); }
 .station-info dl {
   float: left;
   margin: 4%;
