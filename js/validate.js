@@ -69,6 +69,12 @@ $(function() {
       }
     };
 
+    var ltzero = function() {
+      if (Number($(theInput).val()) >= 0) {
+        return true;
+      }
+    };
+
     var latitude = function() {
       if (latitudeExp.exec($(theInput).val()) == null) {
         return true;
@@ -101,6 +107,13 @@ $(function() {
       if ($(theInput).hasClass("gtzero")) {
         if(gtzero()) {
           errorMessage = 'Must be greater than 0';
+          return errorMessage;
+        }
+      }
+
+      if ($(theInput).hasClass("ltzero")) {
+        if(ltzero()) {
+          errorMessage = 'Must be a negative number';
           return errorMessage;
         }
       }
