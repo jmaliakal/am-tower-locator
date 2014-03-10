@@ -31,7 +31,7 @@
         <div class="intro-body">
           <img src="img/fcc-logo.png" id="fcc-logo" title="FCC" height="28" width="34" />
           <h1>AM Tower Locator</h1>
-          <h4>Enter the latitude and longitude, <strong>in decimal degrees</strong>, and height, <strong>in meters</strong>, of your tower to determine if you need to notify any AM Stations prior to building.</h4>
+          <h4>Enter the latitude and longitude, <strong>in decimal degrees (NAD 83)</strong>, and height, <strong>in meters</strong>, of your tower to determine if you need to notify any AM Stations prior to building.</h4>
         </div>
         <form class="form-inline" id="locator">
           <fieldset>
@@ -55,7 +55,9 @@
         </form>
         <p class="muted">
           Need help converting to decimal degrees?<br />
-          <a href="http://transition.fcc.gov/mb/audio/bickel/DDDMMSS-decimal.html" target="_blank" title="Lat/Long Converter">Lat/Long Converter</a>
+          <a href="http://transition.fcc.gov/mb/audio/bickel/DDDMMSS-decimal.html" target="_blank" title="Lat/Long Converter">Lat/Long Converter</a><br /><br />
+          Need to convert NAD 27 to NAD 83?<br />
+          <a href="http://www.ngs.noaa.gov/cgi-bin/nadcon.prl" target="_blank" title=" Use NADCON (North American Datum Conversion) to convert latitude and longitude from NAD 27 to NAD 83 or from NAD 83 to NAD 27.">NADCON Computations</a>
         </p>
       </div>
     </div>

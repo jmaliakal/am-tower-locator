@@ -27,7 +27,7 @@ body {
 }
 
 /* resets */
-a {
+a:link, a:visited {
   color: #0088CC;
   text-decoration: none;
 }
@@ -185,9 +185,8 @@ input[type="text"] {
   font-style: italic;
   margin-top: 20px;
 }
-.muted a {
-  color: #aaaaaa;
-  text-decoration: underline;
+.muted a:link, .muted a:visited {
+  color: #73b6e6;
 }
 
 /* content */
