@@ -42,6 +42,12 @@ function stations_output(bgmap, stations) {
     bgmap.setView([$("#lat").val(), $("#long").val()], 9);
     
   } else {  // yes results
+    for (var i = stations.stations.length - 1; i >= 0; i--) {
+      if (stations.stations[i].file_number === '---') {
+        stations.stations.splice(i, 1);
+      }
+    }
+
     // loop through api results and add property
     $.each(stations.stations, function(key, curStation) {
       var modStation = new station(curStation, $("#height").val());
