@@ -232,7 +232,7 @@ h5.dont-notify { color: #00af4d; }
 .station-extra { background-color: #fbfbfb; }
 .station-map {
   box-shadow: 0 0 3px rgba(0, 0, 0, 0.35);
-  height:460px;
+  height: 200px;
   width: 100%;
 }
 .notify .station-heading { background-color: #fd4239; }
